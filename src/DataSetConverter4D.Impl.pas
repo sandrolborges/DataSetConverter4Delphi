@@ -180,7 +180,23 @@ begin
             end;
           TFieldType.ftDate, TFieldType.ftTimeStamp, TFieldType.ftDateTime, TFieldType.ftTime:
             begin
-              Result.AddPair(key, TJSONString.Create(DateToISO8601(dataSet.Fields[i].AsDateTime)))
+//              Result.AddPair(key, TJSONString.Create(DateToISO8601(dataSet.Fields[i].AsDateTime)))
+//              Result.AddPair(key, TJSONString.Create(DateToISO8601(dataSet.Fields[i].AsDateTime, False)))
+//              Result.AddPair(key, TJSONString.Create(DateTimeToStr(ISO8601ToDate(dataSet.Fields[i].AsString))))
+//              Result.AddPair(key, TJSONString.Create(ISO8601ToDate(dataSet.Fields[i].AsDateTime, False)))
+
+                case dataSet.Fields[i].DataType of
+                  TFieldType.ftDateTime, TFieldType.ftTimeStamp:
+                  begin
+                    Result.AddPair(key, TJSONString.Create(FormatDateTime('yyyy-mm-dd hh:nn:ss',dataSet.Fields[i].AsDateTime)));
+                  end;
+                  TFieldType.ftDate:
+                  begin
+                    Result.AddPair(key, TJSONString.Create(FormatDateTime('yyyy-mm-dd',dataSet.Fields[i].AsDateTime)));
+                  end;
+                  else
+                    Result.AddPair(key, TJSONString.Create(DateToISO8601(dataSet.Fields[i].AsDateTime)));
+                end;
             end;
 
           TFieldType.ftCurrency:
